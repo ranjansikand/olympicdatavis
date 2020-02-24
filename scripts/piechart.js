@@ -24,7 +24,7 @@ function donutVisBase(data, country, svg) {
   makeDonut(goldMedals, silverMedals, bronzeMedals, country, svg, data);
 }
 
-/************inner pie chart**************/
+/************core pie chart**************/
 function makeDonut(goldMedals, silverMedals, bronzeMedals, country, svg, data) {
   var boundingBox = d3.select(svg).node().getBoundingClientRect();
   var h = boundingBox.height;
@@ -124,6 +124,9 @@ function makepie(data, country, medal, svg, outerRadius, donutData) {
     })
     .entries(data);
 
+  let tooltip = d3.select('body').append('div')
+    .attr('class', 'tooltip');
+
   var innerRadius2 = outerRadius;
   var outerRadius2 = 2 * innerRadius2;
 
@@ -158,22 +161,19 @@ function makepie(data, country, medal, svg, outerRadius, donutData) {
     var selected = 0;
   //Draw arc paths
   arcs2.append("path")
+    .attr('class', 'midring')
     .attr("fill", function(d) {
       return 'rgb(' + 252*(d.value/maxV) + ',0,0)';
     })
     .attr("d", arc2)
     .attr("stroke", "white")
     .style("stroke-width", "0.1px")
-    .on('mouseover', function(d) {
-      d3.select(this).transition().duration(100).attr('opacity', .7);
-
-    })
-    .on('mouseleave', function(d) {
-      d3.select(this).transition().duration(100).attr('opacity', 1);
-    })
+    .on('mouseover', showTooltip)
+    .on('mouseleave', hideTooltip)
     .on('click', function(d, i) {
         d3.select('.pie').selectAll('text.title').remove();
-        d3.select('.pie').selectAll('arcs.center').remove();
+        d3.select('.pie').selectAll('path.outerring').remove();
+        d3.select('.pie').selectAll('text.outerring').remove();
         makeCenterPie(piedata[i].key, medal, country, svg, outerRadius2, donutData);
     });
 
@@ -202,6 +202,17 @@ function makepie(data, country, medal, svg, outerRadius, donutData) {
       return (medal + ' Events for ' + country);
     })
     .attr('font-size', '22px');
+
+    function showTooltip(d) {
+      tooltip.style('left', (d3.event.pageX + 10) + 'px')
+        .style('top', (d3.event.pageY - 25) + 'px')
+        .style('display', 'inline-block')
+        .html(d.value + ' medal(s)');
+    }
+
+    function hideTooltip() {
+      tooltip.style('display', 'none');
+    }
 
 }
 
@@ -266,6 +277,7 @@ function makeCenterPie(sport, medal, country, svg, innerRadiusPie, donutData) {
     .attr("transform", "translate(" +(w/2) + "," + (((h)/2)-25) + ")");
 
   arcs.append("path")
+    .attr('class', 'outerring')
     .attr("fill", function(d, i) {
       return color(i);
     })
@@ -286,16 +298,20 @@ function makeCenterPie(sport, medal, country, svg, innerRadiusPie, donutData) {
 
   // wedge labels
   arcs.append("text")
+    .attr('class', 'outerring')
     .attr("transform", function(d) {
       return "translate(" + arc.centroid(d) + ")";
     })
     .attr("text-anchor", "middle")
     .text(function(d) {
       if (d.value == oneMedal && d.value >= 1) {
+        oneMedal = -1;
         return 'One medal: ' + d.value;
       } else if (d.value == twoMedal && d.value >= 1) {
+        twoMedal = -1;
         return 'Two: ' + d.value;
       } else if (d.value == threeMedal && d.value >= 1) {
+        threeMedal = -1;
         return 'Three: ' + d.value;
       } else if (d.value == fourMedal && d.value >= 1){
         return 'Four or more: ' + d.value;
@@ -314,9 +330,10 @@ function makeCenterPie(sport, medal, country, svg, innerRadiusPie, donutData) {
       return ('Number of Medals Won by '+ sport +
         ' Athletes Representing ' + country);
     })
-    .attr('font-size', '22px');
+    .attr('font-size', '21px');
 
   d3.select('.pie').append('text')
+    .attr('class', 'title')
     .attr('x', function(d) {
       return 10;
     })
