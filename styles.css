@@ -1,0 +1,50 @@
+.bar {
+    width: 59%;
+    height: 90%;
+}
+
+.pie {
+    width: 40%;
+    height: 90%;
+}
+
+.radial {
+    width: 100%;
+    height: 70%;
+}
+
+rect.barg:hover {
+  opacity: 0.7;
+}
+
+path.arc {
+  opacity: 0.9;
+  transition: opacity 0.5s;
+}
+
+path.arc:hover {
+  opacity: 0.7;
+}
+
+.axis line, .axis circle  {
+  stroke: #cccccc;
+  stroke-width: 1px
+}
+
+.axis circle {
+  fill: none;
+}
+
+.r.axis text {
+  text-anchor: end
+}
+
+.tooltip {
+  position: absolute;
+  display: none;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 3px;
+  box-shadow: -3px 3px 15px #888;
+  color: white;
+  padding: 6px;
+}
