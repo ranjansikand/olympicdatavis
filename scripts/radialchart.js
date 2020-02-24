@@ -39,10 +39,6 @@ function drawRadial(country, sportSet) {
     width = boundingBox.width;
     chartRadius = height / 2 - 40;
 
-
-  const color = d3.scaleOrdinal()
-    .range(['#050000','#5c0000','#ad0000','#ff0000'])
-
   let svg = d3.select('.radial').append('svg')
     .attr('width', width)
     .attr('height', height)
@@ -144,7 +140,13 @@ function drawRadial(country, sportSet) {
           .data(data)
           .enter().append('path')
           .attr('class', 'arc')
-          .style('fill', (d, i) => color(i))
+          .style('fill', function(d) {
+            return 'rgb(' +
+              222*((d.value - d3.min(data, function(d) { return d.value; }))
+              / (d3.max(data, function(d) { return d.value; })
+              - d3.min(data, function(d) { return d.value; })))
+              + ',0,0)';
+          })
 
       arcs.transition()
         .delay((d, i) => i * 200)
@@ -164,7 +166,7 @@ function drawRadial(country, sportSet) {
         tooltip.style('left', (d3.event.pageX + 10) + 'px')
           .style('top', (d3.event.pageY - 25) + 'px')
           .style('display', 'inline-block')
-          .html(d.value);
+          .html(d.value + ' athletes');
       }
 
       function hideTooltip() {
