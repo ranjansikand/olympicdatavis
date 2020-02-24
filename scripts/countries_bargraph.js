@@ -14,7 +14,7 @@ function drawBarGraph(data, svg, dataMedals, topSports) {
   // add axes
   var x = d3.scaleLinear()
     .range([margins.left, (width - 1)])
-    .domain([0, 1.05*d3.max(data, function(d) {return d.value})]);
+    .domain([0]);
   var y = d3.scaleLinear()
     .range([height, margins.bottom])
     .domain([0, 1.05*d3.max(data, function(d) {return d.value})]);
@@ -23,7 +23,7 @@ function drawBarGraph(data, svg, dataMedals, topSports) {
     .attr('class', 'xaxis')
     .attr('transform', 'translate(' + (0) + ','
       + (height - margins.bottom) + ')')
-    .call(d3.axisBottom(x));
+    .call(d3.axisBottom(x).ticks(68));
 
   d3.select(svg).append("g")
     .attr('class', 'yaxis')
@@ -95,7 +95,7 @@ function drawBarGraph(data, svg, dataMedals, topSports) {
     tooltip.style('left', (d3.event.pageX + 10) + 'px')
       .style('top', (d3.event.pageY - 25) + 'px')
       .style('display', 'inline-block')
-      .html(d.value);
+      .html(d.key + ': '+ d.value + ' athletes');
   }
 
   function hideTooltip() {
