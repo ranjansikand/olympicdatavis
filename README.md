@@ -9,6 +9,3 @@ The visualization system is broken into three distinct pieces.
 The central plot is a simple barplot that depicts over 65 countries with the highest number of Olympic Athletes. This is accompanied by a multi-level pie chart that shows a breakdown of medal winnings, and a radial chart that shows the sports from each country with the highest number of competing athletes. Unsurprisingly, Track and Field (athletics) routinely finishes in the top 3.
 
 The radial chart is based on an implementation from Bl.ocks by Anton Orlov.
-
-
-Test
